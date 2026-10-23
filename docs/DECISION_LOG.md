@@ -31,3 +31,27 @@
 **Decision:** Data-Oriented Design via Entity Component System (ECS).
 **Rejected Alternatives:** Traditional Object-Oriented Design / Scene Graphs (causes cache misses, memory fragmentation, and tight coupling).
 **Consequences:** Game objects are strictly integer IDs. Data is grouped by component type in contiguous arrays. Systems iterate over these arrays. This aligns perfectly with submitting bulk command buffers to Vulkan.
+
+## 005 - Main Loop & State Synchronization
+**Date:** 2026.10.23
+**Subject:** Threading and Loop Architecture for V1
+**Context:** The Editor UI (ImGui), Game Simulation, and Vulkan Renderer must coexist without memory data races.
+**Decision:** Single-threaded interleaved loop (`Input -> ImGui -> ECS Update -> Render Extraction -> Vulkan`).
+**Rejected Alternatives:** Multi-threaded (Logic vs. Render threads). While this is the industry standard for performance, the synchronization barriers (double-buffered state queues) introduce too much complexity for V1.
+**Consequences:** Rendering framerate is directly tied to the simulation update rate. We will design the systems to be thread-safe for a future V2 upgrade.
+
+## 006 - ECS Implementation
+**Date:** [2026.10.23]
+**Subject:** Entity Component System Backbone
+**Context:** Need a fast, cache-friendly data structure to store components in contiguous arrays.
+**Decision:** Custom C++20 Sparse Set.
+**Rejected Alternatives:** EnTT. While EnTT is the industry standard and highly optimized, building a custom sparse set aligns with the project's core goal of learning first-principles memory management and data-oriented design.
+**Consequences:** High initial development overhead. Requires manual implementation of dense component arrays, sparse entity indices, intersection view iterators, and "swap-and-pop" memory deletion logic.
+
+## 007 - Reflection & Serialization Pipeline
+**Date:** [Current Date]
+**Subject:** Exposing C++ Data to the Editor and Disk
+**Context:** The ImGui editor needs to automatically generate UI for components, and scenes must be saved/loaded. C++20 lacks native reflection.
+**Decision:** External Code Generation via Python.
+**Rejected Alternatives:** Macro-based registration (inflexible, pollutes headers, tedious to maintain).
+**Consequences:** Introduces Python as a strict build dependency. A pre-build step in CMake will run a Python script to parse headers for `// @reflect` tags and generate the necessary C++ serialization boilerplate before compilation.
