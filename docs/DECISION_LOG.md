@@ -41,7 +41,7 @@
 **Consequences:** Rendering framerate is directly tied to the simulation update rate. We will design the systems to be thread-safe for a future V2 upgrade.
 
 ## 006 - ECS Implementation
-**Date:** [2026.10.23]
+**Date:** 2026.10.23
 **Subject:** Entity Component System Backbone
 **Context:** Need a fast, cache-friendly data structure to store components in contiguous arrays.
 **Decision:** Custom C++20 Sparse Set.
@@ -49,7 +49,7 @@
 **Consequences:** High initial development overhead. Requires manual implementation of dense component arrays, sparse entity indices, intersection view iterators, and "swap-and-pop" memory deletion logic.
 
 ## 007 - Reflection & Serialization Pipeline
-**Date:** [Current Date]
+**Date:** 2026.10.23
 **Subject:** Exposing C++ Data to the Editor and Disk
 **Context:** The ImGui editor needs to automatically generate UI for components, and scenes must be saved/loaded. C++20 lacks native reflection.
 **Decision:** External Code Generation via Python.
