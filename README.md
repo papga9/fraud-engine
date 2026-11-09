@@ -1,3 +1,4 @@
+# Framework for Rendering Arbitrary, Unfinished Dimensions
 # Custom C++20 Vulkan Engine
 
 A first-principles, data-oriented 3D game engine built from scratch. This project is designed as an **Editor-First** environment, prioritizing explicit hardware control, deterministic memory management, and cache-friendly simulation architecture.
